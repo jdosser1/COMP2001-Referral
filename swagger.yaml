@@ -1,0 +1,146 @@
+swagger: "2.0"
+info:
+  description: "This is an API that provides the ability to enter student projects using the end points below."
+  version: "1.0.0"
+  title: "COMP2001 Showcase"
+  termsOfService: "http://web.socem.plymouth.ac.uk/shirley/"
+  contact:
+    email: "shirley.atkinson@plymouth.ac.uk"
+  license:
+    name: "CC BY-NC-SA 4.0"
+    url: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+host: "web.socem.plymouth.ac.uk"
+basePath: "/shirley/auth/api"
+tags:
+- name: "project"
+  description: "All about projects"
+schemes:
+- "https"
+- "http"
+paths:
+  /projects:
+    post:
+      tags:
+      - "project"
+      summary: "Create a new project"
+      description: "student needs to be already in system"
+      operationId: "create"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created project ojbect"
+        required: true
+        schema:
+          $ref: "#/definitions/project"
+      responses:
+        "201":
+          description: "successful operation, returns json object 'UserID':0 with user ID number"
+        "208":
+          description: "Call successful, but email already exists and so new entry not made"
+        "404":
+          description: "Not Found"
+    get:
+      tags:
+      - "project"
+      summary: "provides view of all projects for a programme"
+      description: ""
+      operationId: "getProjects"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "Details required"
+        required: true
+        schema:
+          $ref: "#/definitions/project"
+      responses:
+        "200":
+          description: "successful operation"
+          
+  /projects/{id}:
+    put:
+      tags:
+      - "project"
+      summary: "Update an existing project"
+      description: "Can update title, description and year but can only be done by an logged in user"
+      operationId: "updateProject"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id of project to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "The details for project.  Blank strings for entries that do not need to change"
+        required: true
+        schema:
+          $ref: "#/definitions/project"
+      responses:
+        "204":
+          description: "Success"
+        "404":
+          description: "Not Found"
+    delete:
+      tags:
+      - "project"
+      summary: "Delete project"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteproject"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "project to be deleted"
+        required: true
+        type: "string"
+      responses:
+        "204":
+          description: "Success"
+         
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  project:
+    type: "object"
+    properties:
+      Title:
+        type: "string"
+      Description:
+        type: "string"
+      Year:
+        type: "string"
+      Student_ID:
+        type: "integer"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
